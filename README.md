@@ -18,8 +18,8 @@ Criar uma API robusta para gerenciar jogadores, progresso, níveis, conquistas e
 ## 🚀 Tecnologias Utilizadas
 
 - **Python 3.11**
-- **Flask** (framework web)
-- **Flask-JWT-Extended** (autenticação via token JWT)
+- **Flask** (Framework)
+- **Flask-JWT** (autenticação via token JWT)
 - **Flask-Migrate + SQLAlchemy** (ORM e controle de migrações)
 - **SQLite** (banco de dados local simples)
 - **Insomnia** (para testar e validar endpoints da API)
