@@ -9,10 +9,9 @@ Criar uma API robusta para gerenciar jogadores, progresso, níveis, conquistas e
 ---
 
 ## 🗂 Estrutura do Repositório
-📁 API_GameProject_N2/ # Pasta principal do projeto com os arquivos da API
-📦 API_GameProject_N2.rar # Versão compactada do projeto
-🧪 Insomnia.yaml # Arquivo de testes de rotas (Insomnia)
-🧪 Insomnia_N2_Andrei... # (Insomnia)
+- 📁 API_GameProject_N2/ # Pasta principal do projeto com os arquivos da API
+- 📦 API_GameProject_N2.rar # Versão compactada do projeto
+- 🧪 Insomnia.yaml # Arquivo de testes de rotas (Insomnia)
 
 ---
 
@@ -43,34 +42,33 @@ Criar uma API robusta para gerenciar jogadores, progresso, níveis, conquistas e
 ## 🛠 Como executar o projeto
 
 ### 1. Crie um ambiente virtual e ative
-python -m venv venv
-source venv/bin/activate   # Linux/Mac
-venv\Scripts\activate      # Windows
+- python -m venv venv
+- source venv/bin/activate   # Linux/Mac
+- venv\Scripts\activate      # Windows
 
 ### 2. Instale as dependências
-pip install -r requirements.txt
+- pip install -r requirements.txt
 
 ### 3. Execute as migrações e rode o servidor
-flask db init
-flask db migrate
-flask db upgrade
-flask run
+- flask db init
+- flask db migrate
+- flask db upgrade
+- flask run
 
 ---
 
 ## 🔐 Autenticação
 A API utiliza JWT para proteger rotas. É necessário:
 
-1.Fazer login via /login para obter o token
-
-2.Enviar o token no header Authorization: Bearer <token> nas demais requisições protegidas
+- Fazer login via /login para obter o token
+- Enviar o token no header Authorization: Bearer <token> nas demais requisições protegidas
 
 ---
 
 ## 🧪 Testes com Insomnia
-Dois arquivos .yaml estão disponíveis para testar todos os endpoints com o Insomnia:
+O arquivo .yaml está disponível para testar todos os endpoints com o Insomnia:
 
-Insomnia.yaml — inclui todas as rotas
+- Insomnia.yaml — inclui todas as rotas
 
 ---
 
@@ -80,19 +78,19 @@ Este projeto faz parte do PAC Extensionista da CatólicaSC e tem como missão de
 ---
 
 ## 👥 Desenvolvedores
-Ruan Klen (responsável pelo repositório)
-Gustavo Voltolini
-Vitor Mayer
-Luiz Côrrea
+- Ruan Klen (responsável pelo repositório)
+- Gustavo Voltolini
+- Vitor Mayer
+- Luiz Côrrea
 
 ---
 
 ## 🏫 Universidade
-Universidade Católica de Santa Catarina
-Curso: Engenharia de Software
-Disciplina: Server-Side (N2)
-Ano: 2025
-Professor: Andrei Carniel
+- Universidade Católica de Santa Catarina
+- Curso: Engenharia de Software
+- Disciplina: Server-Side (N2)
+- Ano: 2025
+- Professor: Andrei Carniel
 
 ---
 
