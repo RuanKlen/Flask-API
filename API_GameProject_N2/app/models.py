@@ -23,8 +23,10 @@ class Jogador(db.Model):  # cria o modelo de objeto para o banco de dados
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
+    tipo = db.Column(db.String(50), nullable=False)
+    raridade = db.Column(db.String(50))
     descricao = db.Column(db.String(255))
-    jogador_id = db.Column(db.Integer, db.ForeignKey('jogador.id'), nullable=False)
+    jogador_id = db.Column(db.Integer, db.ForeignKey('jogador.id'), nullable=True)
     
 
     def to_dict(self):
@@ -67,8 +69,9 @@ class Sessao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     jogador_id = db.Column(db.Integer, db.ForeignKey('jogador.id'), nullable=False)
     cenario_id = db.Column(db.Integer, db.ForeignKey('cenario.id'), nullable=False)
+    rota_id = db.Column(db.Integer, db.ForeignKey('rota.id'), nullable=True)  
     tempo_total = db.Column(db.Integer)
-    modo_jogo = db.Column(db.String(20))  # fácil, médio, difícil
+    modo_jogo = db.Column(db.String(20))  
     coop = db.Column(db.Boolean, default=False)
 
     def to_dict(self):
@@ -76,10 +79,12 @@ class Sessao(db.Model):
             'id': self.id,
             'jogador_id': self.jogador_id,
             'cenario_id': self.cenario_id,
+            'rota_id': self.rota_id,  
             'tempo_total': self.tempo_total,
             'modo_jogo': self.modo_jogo,
             'coop': self.coop, 
         }
+
 
 
 class Desafio(db.Model):

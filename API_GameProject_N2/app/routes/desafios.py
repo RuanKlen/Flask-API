@@ -1,13 +1,13 @@
 from flask import request, jsonify
 from app.routes import bp
 from app.db import db
-from app.models import Item, Cenario, Rota, Sessao, Desafio
-from app.auth import token_required
+from app.models import Desafio
+from app.auth import admin_required, token_required
 
 # ------------------ DESAFIOS ------------------
 @bp.route('/desafios', methods=['POST'])
-@token_required
-def criar_desafio(current_user):
+@admin_required
+def criar_desafio(current_user, current_role):
     data = request.get_json()
     desafio = Desafio(jogador_id=data['jogador_id'], nome=data['nome'], tentativas=data.get('tentativas', 1), tempo=data.get('tempo'), pontos=data.get('pontos'), coop=data.get('coop', False))
     db.session.add(desafio)
@@ -16,13 +16,13 @@ def criar_desafio(current_user):
 
 @bp.route('/desafios', methods=['GET'])
 @token_required
-def listar_desafios(current_user):
+def listar_desafios(current_user, current_role):
     desafios = Desafio.query.all()
     return jsonify([{'id': d.id, 'jogador_id': d.jogador_id, 'nome': d.nome, 'tentativas': d.tentativas, 'tempo': d.tempo, 'pontos': d.pontos, 'coop': d.coop} for d in desafios]), 200
 
 @bp.route('/desafios/<int:id>', methods=['PUT'])
-@token_required
-def atualizar_desafio_por_id(current_user, id):
+@admin_required
+def atualizar_desafio_por_id(current_user, current_role, id):
     desafio = Desafio.query.get_or_404(id)
     data = request.get_json()
 
@@ -43,8 +43,8 @@ def atualizar_desafio_por_id(current_user, id):
     return jsonify(desafio.to_dict()), 200
 
 @bp.route('/desafios/<int:id>', methods=['DELETE'])
-@token_required
-def deletar_desafio(current_user, id):
+@admin_required
+def deletar_desafio(current_user, current_role, id):
     desafio = Desafio.query.get_or_404(id)
     db.session.delete(desafio)
     db.session.commit()
@@ -52,6 +52,6 @@ def deletar_desafio(current_user, id):
 
 @bp.route('/desafios/<int:id>', methods=['GET'])
 @token_required
-def obter_desafio(current_user, id):
+def obter_desafio(current_user, current_role, id):
     desafio = Desafio.query.get_or_404(id)
     return jsonify(desafio.to_dict()), 200

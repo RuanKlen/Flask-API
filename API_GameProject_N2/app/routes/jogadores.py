@@ -2,12 +2,12 @@ from flask import jsonify, request
 from app import db  # Certifique-se de que 'app' é o seu objeto Flask
 from app.models import Jogador  # Importe o modelo Jogador
 from app.routes import bp  # Certifique-se de que 'bp' é o seu Blueprint
-from app.auth import token_required  # Importe a função de autenticação
+from app.auth import admin_required, token_required  # Importe a função de autenticação
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # --- CREATE (POST) ---
 @bp.route('/jogadores', methods=['POST'])
-@token_required  # Requer autenticação
-def create_jogador(current_user):
+def create_jogador():
     """Cria um novo jogador."""
     try:
         data = request.get_json() or {}
@@ -21,7 +21,12 @@ def create_jogador(current_user):
             return jsonify({'error': 'Email já cadastrado'}), 400  # Bad Request
 
         # Cria o novo jogador
-        novo_jogador = Jogador(nome=data['nome'], email=data['email'], senha=data['senha'])  # Use a senha diretamente aqui (e faça o hash na criação)
+        novo_jogador = Jogador(
+            nome=data['nome'],
+            email=data['email'],
+            senha=generate_password_hash(data['senha'])  # Aplica hash aqui
+        )
+  # Use a senha diretamente aqui (e faça o hash na criação)
         db.session.add(novo_jogador)
         db.session.commit()
 
@@ -33,8 +38,8 @@ def create_jogador(current_user):
 
 # --- READ (GET) ---
 @bp.route('/jogadores', methods=['GET'])
-@token_required  # Requer autenticação
-def get_jogadores(current_user):
+@admin_required  # Requer autenticação
+def get_jogadores(current_user, current_role):
     """Recupera um jogador específico (por ID) ou todos os jogadores."""
     jogador_id = request.args.get('id')  # Use 'id' para buscar por ID
 
@@ -53,8 +58,8 @@ def get_jogadores(current_user):
 
 # --- UPDATE (PUT/PATCH) ---
 @bp.route('/jogadores/<int:jogador_id>', methods=['PUT', 'PATCH'])
-@token_required  # Requer autenticação
-def update_jogador(current_user, jogador_id):
+@admin_required  # Requer autenticação
+def update_jogador(current_user, current_role, jogador_id):
     """Atualiza os dados de um jogador existente."""
     try:
         jogador = Jogador.query.get_or_404(jogador_id)  # Retorna 404 se não encontrar
@@ -82,8 +87,8 @@ def update_jogador(current_user, jogador_id):
 
 # --- DELETE (DELETE) ---
 @bp.route('/jogadores/<int:jogador_id>', methods=['DELETE'])
-@token_required  # Requer autenticação
-def delete_jogador(current_user, jogador_id):
+@admin_required  # Requer autenticação
+def delete_jogador(current_user, current_role, jogador_id):
     """Exclui um jogador."""
     try:
         jogador = Jogador.query.get_or_404(jogador_id)  # Retorna 404 se não encontrar
@@ -97,6 +102,6 @@ def delete_jogador(current_user, jogador_id):
 # Obter jogador por ID
 @bp.route('/jogadores/<int:id>', methods=['GET'])
 @token_required
-def obter_jogador(current_user, id):
+def obter_jogador(current_user, current_role, id):
     jogador = Jogador.query.get_or_404(id)
     return jsonify(jogador.to_dict()), 200

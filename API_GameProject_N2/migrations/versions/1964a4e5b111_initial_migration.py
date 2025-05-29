@@ -1,8 +1,8 @@
-"""adiciona itens, cenarios, rotas, sessoes e desafios
+"""initial migration
 
-Revision ID: 4c914676afa3
-Revises: 219a3b7bf7f8
-Create Date: 2025-05-21 19:36:11.609931
+Revision ID: 1964a4e5b111
+Revises: 
+Create Date: 2025-05-27 15:05:06.623632
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4c914676afa3'
-down_revision = '219a3b7bf7f8'
+revision = '1964a4e5b111'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -24,6 +24,17 @@ def upgrade():
     sa.Column('dificuldade', sa.String(length=50), nullable=True),
     sa.Column('descricao', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('jogador',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('nome', sa.String(length=100), nullable=False),
+    sa.Column('email', sa.String(length=100), nullable=False),
+    sa.Column('senha', sa.String(length=255), nullable=False),
+    sa.Column('data_cadastro', sa.DateTime(), nullable=True),
+    sa.Column('pontuacao', sa.Integer(), nullable=True),
+    sa.Column('ativo', sa.Boolean(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
     )
     op.create_table('rota',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -45,8 +56,10 @@ def upgrade():
     op.create_table('item',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nome', sa.String(length=100), nullable=False),
+    sa.Column('tipo', sa.String(length=50), nullable=False),
+    sa.Column('raridade', sa.String(length=50), nullable=True),
     sa.Column('descricao', sa.String(length=255), nullable=True),
-    sa.Column('jogador_id', sa.Integer(), nullable=False),
+    sa.Column('jogador_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['jogador_id'], ['jogador.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -54,11 +67,13 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('jogador_id', sa.Integer(), nullable=False),
     sa.Column('cenario_id', sa.Integer(), nullable=False),
+    sa.Column('rota_id', sa.Integer(), nullable=True),
     sa.Column('tempo_total', sa.Integer(), nullable=True),
     sa.Column('modo_jogo', sa.String(length=20), nullable=True),
     sa.Column('coop', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['cenario_id'], ['cenario.id'], ),
     sa.ForeignKeyConstraint(['jogador_id'], ['jogador.id'], ),
+    sa.ForeignKeyConstraint(['rota_id'], ['rota.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
@@ -70,5 +85,6 @@ def downgrade():
     op.drop_table('item')
     op.drop_table('desafio')
     op.drop_table('rota')
+    op.drop_table('jogador')
     op.drop_table('cenario')
     # ### end Alembic commands ###

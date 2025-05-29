@@ -1,13 +1,13 @@
 from flask import request, jsonify
 from app.routes import bp
 from app.db import db
-from app.models import Item, Cenario, Rota, Sessao, Desafio
-from app.auth import token_required
+from app.models import Rota
+from app.auth import admin_required, token_required
 
 # ------------------ ROTAS ------------------
 @bp.route('/rotas', methods=['POST'])
-@token_required
-def criar_rota(current_user):
+@admin_required
+def criar_rota(current_user, current_role):
     data = request.get_json()
     rota = Rota(tipo=data['tipo'], descricao=data.get('descricao'))
     db.session.add(rota)
@@ -16,13 +16,13 @@ def criar_rota(current_user):
 
 @bp.route('/rotas', methods=['GET'])
 @token_required
-def listar_rotas(current_user):
+def listar_rotas(current_user, current_role):
     rotas = Rota.query.all()
     return jsonify([{'id': r.id, 'tipo': r.tipo, 'descricao': r.descricao} for r in rotas]), 200
 
 @bp.route('/rotas/<int:id>', methods=['PUT'])
-@token_required
-def atualizar_rota_por_id(current_user, id):
+@admin_required
+def atualizar_rota_por_id(current_user, current_role, id):
     rota = Rota.query.get_or_404(id)
     data = request.get_json()
 
@@ -36,8 +36,8 @@ def atualizar_rota_por_id(current_user, id):
 
 
 @bp.route('/rotas/<int:id>', methods=['DELETE'])
-@token_required
-def deletar_rota(current_user, id):
+@admin_required
+def deletar_rota(current_user, current_role, id):
     rota = Rota.query.get_or_404(id)
     db.session.delete(rota)
     db.session.commit()
@@ -45,6 +45,6 @@ def deletar_rota(current_user, id):
 
 @bp.route('/rotas/<int:id>', methods=['GET'])
 @token_required
-def obter_rota(current_user, id):
+def obter_rota(current_user, current_role, id):
     rota = Rota.query.get_or_404(id)
     return jsonify(rota.to_dict()), 200
